@@ -1,0 +1,29 @@
+# .github/workflows/pull-change.yml
+
+name: Merge upstream branches
+on:
+  schedule:
+    - cron:  '* * * * *'
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge upstream
+        run: |
+          git config --global user.name 'ra237'
+          git config --global user.email 'ra237@users.noreply.github.com'
+
+          # "git checkout master" is unnecessary, already here by default
+          git pull --unshallow
+
+          git remote add upstream https://github.com/ra237/twitch-harmony.git
+          git fetch upstream
+
+          git checkout -b feature/x origin/feature/x
+          git merge --no-edit upstream/feature/x
+          git push origin feature/x
+
+          git checkout master
+          git merge --no-edit upstream/master
+          git push origin master
