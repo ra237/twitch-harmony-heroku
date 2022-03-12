@@ -15,7 +15,7 @@ export class WatchStreamer extends Command {
     cache: WatchCache = {}
     client: CommandClient
     // interval for each guild needed
-    interval = setInterval(() => this.isStreamerLive(), 10000)
+    interval = setInterval(() => this.isStreamerLive(), 14900)
 
     constructor(client: CommandClient) {
         super()
@@ -68,6 +68,7 @@ export class WatchStreamer extends Command {
     }
 
     private async isStreamerLive(): Promise<void> {
+        console.log("Current cache: " + this.cache)
         for(const guildId of Object.keys(this.cache)) {
             const currentGuild = this.cache[guildId]
             const streamersToBeChecked: { name: string, id: string }[] = []
@@ -78,13 +79,14 @@ export class WatchStreamer extends Command {
                     streamersToBeChecked.push({name: s, id: streamer.streamerId})
                 }
             }
+            console.log("Checking streamers: " + streamersToBeChecked)
             const streamerIds = streamersToBeChecked.map(streamer => streamer.id)
             const activeStreams = await this.searchStreams(streamerIds)
 
             for(const streamer of streamersToBeChecked) {
                 if (!activeStreams.some(s => s.user_name.toLowerCase() === streamer.name)) {
                     currentGuild[streamer.name].is_live = false
-                    currentGuild[streamer.name].nextCheck = getDateInSeconds() + 15
+                    currentGuild[streamer.name].nextCheck = getDateInSeconds() + 60+15
                 }
             }
 
@@ -94,7 +96,7 @@ export class WatchStreamer extends Command {
                 if(streamer.is_live) { break }
          
                 streamer.is_live = true
-                streamer.nextCheck = getDateInSeconds() + 15
+                streamer.nextCheck = getDateInSeconds() + 60*5
                 const roleToPing = streamer.roleId
 
                 const guildTextChannel = await findTextChannelOfGuild(this.client, guildId, "se-bot")
