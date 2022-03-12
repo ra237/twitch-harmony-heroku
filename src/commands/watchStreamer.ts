@@ -68,7 +68,7 @@ export class WatchStreamer extends Command {
     }
 
     private async isStreamerLive(): Promise<void> {
-        console.log("Current cache: " + this.cache)
+        console.log("Current cache:", this.cache)
         for(const guildId of Object.keys(this.cache)) {
             const currentGuild = this.cache[guildId]
             const streamersToBeChecked: { name: string, id: string }[] = []
@@ -79,7 +79,7 @@ export class WatchStreamer extends Command {
                     streamersToBeChecked.push({name: s, id: streamer.streamerId})
                 }
             }
-            console.log("Checking streamers: " + streamersToBeChecked)
+            console.log("Checking streamers:", streamersToBeChecked)
             const streamerIds = streamersToBeChecked.map(streamer => streamer.id)
             const activeStreams = await this.searchStreams(streamerIds)
 
