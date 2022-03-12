@@ -1,1 +1,1 @@
-web: deno run --alow-net --alow-env --alow-read bot.ts --port=${PORT}
+web: deno run --allow-net --allow-env --allow-read bot.ts --port=${PORT}
